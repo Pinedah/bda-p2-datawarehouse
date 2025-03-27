@@ -1,0 +1,4 @@
+Archivos .CSV utilizados:
+
+Archivos .SQL generados:
+
