@@ -16,4 +16,4 @@ def dividir_archivo(nombre_archivo, tamano_parte=90 * 1024 * 1024):
     print(f"✅ Archivo dividido en {parte} partes y guardado en la carpeta 'data'.")
 
 # 📌 Uso:
-dividir_archivo("raw_data/economia_normalizada.csv")
+dividir_archivo("raw_data/SSNMX_catalogo_19000101_20250213.csv")
