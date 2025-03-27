@@ -19,7 +19,7 @@ def juntar_archivos_csv(carpeta_entrada="data", carpeta_salida="CSVs"):
         dataframes = []
         for parte in sorted(partes):  # Ensure parts are processed in order
             ruta_parte = os.path.join(carpeta_entrada, parte)
-            df = pd.read_csv(ruta_parte)
+            df = pd.read_csv(ruta_parte, low_memory=False, na_values="*")  # Treat '*' as NaN
             dataframes.append(df)
 
         archivo_unido = pd.concat(dataframes, ignore_index=True)
