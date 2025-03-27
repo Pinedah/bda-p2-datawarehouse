@@ -36,7 +36,7 @@ Las visualizaciones fueron diseñadas siguiendo las especificaciones académicas
    ```bash
    git clone https://github.com/tu_usuario/bda-p2-datawarehouse.git
    ```
-2. **Descargar los datos desde Google Drive**: [Enlace a Drive](#)
+2. **Descargar los datos desde Google Drive**: [Enlace a Drive](https://drive.google.com/drive/folders/1cA1QMhuDvF5LAtu3wX5zY4jkewegi0oj?usp=sharing)
    - Carpeta `raw_data`
    - Carpeta `raw_data_limpio`
    - Carpeta `SQLs`
@@ -44,7 +44,7 @@ Las visualizaciones fueron diseñadas siguiendo las especificaciones académicas
    Asegúrate de colocarlas al mismo nivel que el archivo `datawarehouse.ipynb`.
 
 3. **Verificar la versión de Python**
-   - Versión utilizada en el proyecto: **Python X.X.X** *(Especificar versión)*
+   - Versión utilizada en el proyecto: **Python 3.12.3** 
 
 4. **Instalar los requerimientos del proyecto**
    ```bash
@@ -67,10 +67,10 @@ SOURCE SQLs/economia_estados.sql;
 ```
 
 ## 📧 Contacto
-- **Nombre:** [Tu Nombre]
+- **Nombre:** Francisco Pineda Hernández
 - **Institución:** Instituto Politécnico Nacional - ESCOM
 - **Materia:** Bases de Datos Avanzadas
-- **Correo:** [Tu Correo Institucional]
+- **LinkedIn:** [Francisco Pineda](https://www.linkedin.com/in/pinedah/)
 
 Si tienes dudas o sugerencias, no dudes en contactarme. 😊
 
