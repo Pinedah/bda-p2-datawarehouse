@@ -58,8 +58,8 @@ Las visualizaciones fueron diseñadas siguiendo las especificaciones académicas
 ## 📌 Comandos para Importar las Bases de Datos en MySQL
 Para cargar los datos en **MySQL**, usa la consola y ejecuta los siguientes comandos:
 ```sql
-CREATE DATABASE DP_DATAWAREHOUSE;
-USE DP_DATAWAREHOUSE;
+CREATE DATABASE P2_DATAWAREHOUSE;
+USE P2_DATAWAREHOUSE;
 SOURCE SQLs/poblacion.sql;
 SOURCE SQLs/sismos.sql;
 SOURCE SQLs/economia_municipios.sql;
