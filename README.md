@@ -56,15 +56,23 @@ Las visualizaciones fueron diseñadas siguiendo las especificaciones académicas
    - Ejecuta las celdas deseadas para realizar las consultas y visualizaciones.
 
 ## 📌 Comandos para Importar las Bases de Datos en MySQL
-Para cargar los datos en **MySQL**, usa la consola y ejecuta los siguientes comandos:
-```sql
-CREATE DATABASE P2_DATAWAREHOUSE;
-USE P2_DATAWAREHOUSE;
-SOURCE SQLs/poblacion.sql;
-SOURCE SQLs/sismos.sql;
-SOURCE SQLs/economia_municipios.sql;
-SOURCE SQLs/economia_estados.sql;
-```
+Para cargar los datos en **MySQL** usando **XAMPP**, sigue estos pasos:
+
+1. Abre la terminal de MySQL desde XAMPP.
+2. Crea la base de datos:
+   ```sql
+   CREATE DATABASE P2_DATAWAREHOUSE;
+   ```
+3. Importa cada archivo SQL usando el siguiente comando:
+   ```bash
+   mysql -u root -p P2_DATAWAREHOUSE < SQLs/poblacion.sql
+   mysql -u root -p P2_DATAWAREHOUSE < SQLs/sismos.sql
+   mysql -u root -p P2_DATAWAREHOUSE < SQLs/economia_municipios.sql
+   mysql -u root -p P2_DATAWAREHOUSE < SQLs/economia_estados.sql
+   ```
+
+   - **Nota:** Reemplaza `root` con tu usuario de MySQL si es diferente.
+   - Ingresa tu contraseña cuando se te solicite.
 
 ## 📧 Contacto
 - **Nombre:** Francisco Pineda Hernández
@@ -73,4 +81,3 @@ SOURCE SQLs/economia_estados.sql;
 - **LinkedIn:** [Francisco Pineda](https://www.linkedin.com/in/pinedah/)
 
 Si tienes dudas o sugerencias, no dudes en contactarme. 😊
-
