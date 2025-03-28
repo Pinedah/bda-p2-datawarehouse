@@ -1,0 +1,30 @@
+# Bibliotecas de análisis de datos
+pandas==2.0.0
+numpy==1.24.0
+
+# Bibliotecas para visualización
+matplotlib==3.7.1
+seaborn==0.12.2
+folium==0.14.0
+branca==0.6.0
+
+# Bibliotecas para análisis estadístico
+scipy==1.10.1
+
+# Conexión con bases de datos
+mysql-connector-python==8.0.33
+sqlalchemy==2.0.0
+
+# Entorno Jupyter
+jupyter==1.0.0
+notebook==6.5.4
+ipywidgets==8.0.6
+
+# Procesamiento de texto (para limpieza de datos)
+unicodedata2==15.0.0
+
+# Mapas y visualizaciones geoespaciales
+geopy==2.3.0
+
+# Procesamiento y limpieza de datos
+openpyxl==3.1.2  # Para leer archivos Excel
