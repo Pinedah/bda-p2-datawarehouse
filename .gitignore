@@ -6,3 +6,4 @@ CSVs_limpio
 SQLs
 dwarehouse_csvs
 dwarehouse_sqls
+datawarehouse_full.sql
