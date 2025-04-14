@@ -14,7 +14,6 @@ ORDER BY poblacion_afectada_total DESC
 LIMIT 10;
 
 -- 2:
--- Consulta para calcular el impacto económico de sismos con magnitud > 6.0
 SELECT 
     e.nombre_entidad,
     SUM(impacto_economico) AS impacto_economico,
@@ -112,3 +111,134 @@ SELECT
 FROM economia_sismos
 ORDER BY excedente_produccion DESC;
 
+
+-- 6:
+WITH datos_completos AS (
+  SELECT
+    f.ID_sismo,
+    f.ID_zonas,
+    f.poblacion_afectada,
+    z.POBTOT,
+    s.Magnitud,
+    
+    FLOOR(z.POBTOT / 3.0) AS viviendas_estimadas_registro,
+
+    -- Porcentaje de afectación basado en magnitud cuadrática (ajustable)
+    POWER(s.Magnitud / 10.0, 2) * 0.5 AS porcentaje_afectacion,
+
+    -- Clasificación por rango
+    CASE
+      WHEN s.Magnitud < 4.0 THEN 'Leve'
+      WHEN s.Magnitud < 5.0 THEN 'Moderado'
+      WHEN s.Magnitud < 6.0 THEN 'Fuerte'
+      WHEN s.Magnitud < 7.0 THEN 'Muy fuerte'
+      ELSE 'Severo'
+    END AS rango_magnitud
+
+  FROM fact_impacto_sismos_imputed f
+  JOIN dim_zonas z ON f.ID_zonas = z.ID_zonas
+  JOIN dim_sismos s ON f.ID_sismo = s.ID_sismo
+),
+con_viviendas_afectadas AS (
+  SELECT 
+    *,
+    (viviendas_estimadas_registro * porcentaje_afectacion) AS viviendas_afectadas_estimadas
+  FROM datos_completos
+),
+agrupado AS (
+  SELECT 
+    rango_magnitud,
+    SUM(viviendas_afectadas_estimadas) AS total_afectadas,
+    SUM(viviendas_estimadas_registro) AS total_estimadas
+  FROM con_viviendas_afectadas
+  GROUP BY rango_magnitud
+)
+SELECT 
+  rango_magnitud,
+  ROUND((total_afectadas / NULLIF(total_estimadas, 0)) * 100, 2) AS porcentaje_afectadas
+FROM agrupado
+ORDER BY 
+  CASE rango_magnitud
+    WHEN 'Leve' THEN 1
+    WHEN 'Moderado' THEN 2
+    WHEN 'Fuerte' THEN 3
+    WHEN 'Muy fuerte' THEN 4
+    WHEN 'Severo' THEN 5
+  END;
+
+
+-- 7:
+WITH clasificacion_estados AS (
+  SELECT 'Ciudad de Mexico' AS estado, 'Urbano' AS tipo_zona UNION ALL
+  SELECT 'Nuevo Leon', 'Urbano' UNION ALL
+  SELECT 'Jalisco', 'Urbano' UNION ALL
+  SELECT 'Mexico', 'Urbano' UNION ALL
+  SELECT 'Baja California', 'Urbano' UNION ALL
+  SELECT 'Coahuila', 'Urbano' UNION ALL
+  SELECT 'Colima', 'Urbano' UNION ALL
+  SELECT 'Aguascalientes', 'Urbano' UNION ALL
+  SELECT 'Quintana Roo', 'Urbano' UNION ALL
+
+  SELECT 'Oaxaca', 'Rural' UNION ALL
+  SELECT 'Chiapas', 'Rural' UNION ALL
+  SELECT 'Guerrero', 'Rural' UNION ALL
+  SELECT 'Hidalgo', 'Rural' UNION ALL
+  SELECT 'Tabasco', 'Rural' UNION ALL
+  SELECT 'Veracruz', 'Rural' UNION ALL
+  SELECT 'Zacatecas', 'Rural' UNION ALL
+  SELECT 'San Luis Potosi', 'Rural' UNION ALL
+  SELECT 'Michoacan', 'Rural' UNION ALL
+  SELECT 'Puebla', 'Rural'
+),
+
+magnitudes_clasificadas AS (
+  SELECT 
+    s.ID_sismo,
+    s.Magnitud,
+    CASE
+      WHEN s.Magnitud < 4.0 THEN 'Leve'
+      WHEN s.Magnitud < 5.0 THEN 'Moderado'
+      WHEN s.Magnitud < 6.0 THEN 'Fuerte'
+      WHEN s.Magnitud < 7.0 THEN 'Muy fuerte'
+      ELSE 'Severo'
+    END AS rango_magnitud
+  FROM dim_sismos s
+),
+
+vulnerabilidad_completa AS (
+  SELECT 
+    f.ID_sismo,
+    f.ID_zonas,
+    z.nom_ent,
+    z.POBTOT,
+    FLOOR(z.POBTOT / 3) AS viviendas_estimadas_registro,
+    f.poblacion_afectada,
+    f.impacto_economico,
+    m.Magnitud,
+    m.rango_magnitud,
+    c.tipo_zona
+  FROM fact_impacto_sismos_imputed f
+  JOIN dim_zonas z ON f.ID_zonas = z.ID_zonas
+  JOIN magnitudes_clasificadas m ON f.ID_sismo = m.ID_sismo
+  LEFT JOIN clasificacion_estados c ON z.nom_ent = c.estado
+),
+
+vulnerabilidad_con_impacto AS (
+  SELECT 
+    *,
+    (FLOOR(POBTOT / 3) * POW(Magnitud / 10, 2)) AS viviendas_afectadas_estimadas
+  FROM vulnerabilidad_completa
+  WHERE tipo_zona IS NOT NULL
+)
+
+SELECT 
+  tipo_zona,
+  rango_magnitud,
+  COUNT(ID_sismo) AS cantidad_sismos,
+  avg(viviendas_estimadas_registro) AS total_viviendas_estimadas,
+  AVG(viviendas_afectadas_estimadas) AS total_viviendas_afectadas,
+  ROUND(SUM(viviendas_afectadas_estimadas) / SUM(viviendas_estimadas_registro) * 100, 2) AS porcentaje_afectacion,
+  ROUND(100 / (AVG(impacto_economico) / 1000000000 + 1), 2) AS resiliencia_economica
+FROM vulnerabilidad_con_impacto
+GROUP BY tipo_zona, rango_magnitud
+ORDER BY tipo_zona, FIELD(rango_magnitud, 'Leve', 'Moderado', 'Fuerte', 'Muy fuerte', 'Severo');
